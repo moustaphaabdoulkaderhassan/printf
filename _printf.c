@@ -1,51 +1,63 @@
-#include "main.h"
+#include <stdio.h>
+#include <stdarg.h>
 
-/**
- * _printf - formatted output conversion and print data.
- * @format: input string.
- *
- * Return: number of chars printed.
- */
-int _printf(const char *format, ...)
-{
-	unsigned int i = 0, len = 0, ibuf = 0;
-	va_list arguments;
-	int (*function)(va_list, char *, unsigned int);
-	char *buffer;
+int _printf(const char *format, ...) {
+    va_list args;
+    va_start(args, format);
 
-	va_start(arguments, format), buffer = malloc(sizeof(char) * 1024);
-	if (!format || !buffer || (format[i] == '%' && !format[i + 1]))
-		return (-1);
-	if (!format[i])
-		return (0);
-	for (i = 0; format && format[i]; i++)
-	{
-		if (format[i] == '%')
-		{
-			if (format[i + 1] == '\0')
-			{	print_buf(buffer, ibuf), free(buffer), va_end(arguments);
-				return (-1);
-			}
-			else
-			{	function = get_print_func(format, i + 1);
-				if (function == NULL)
-				{
-					if (format[i + 1] == ' ' && !format[i + 2])
-						return (-1);
-					handl_buf(buffer, format[i], ibuf), len++, i--;
-				}
-				else
-				{
-					len += function(arguments, buffer, ibuf);
-					i += ev_print_func(format, i + 1);
-				}
-			} i++;
-		}
-		else
-			handl_buf(buffer, format[i], ibuf), len++;
-		for (ibuf = len; ibuf > 1024; ibuf -= 1024)
-			;
-	}
-	print_buf(buffer, ibuf), free(buffer), va_end(arguments);
-	return (len);
+    int count = 0; // to keep track of the number of characters printed
+
+    while (*format != '\0') {
+        if (*format == '%') {
+            format++; // move to the next character after '%'
+
+            switch (*format) {
+                case 'c':
+                    // %c: Character
+                    putchar(va_arg(args, int));
+                    count++;
+                    break;
+                    
+                case 's':
+                    // %s: String
+                    {
+                        const char *str = va_arg(args, const char *);
+                        while (*str != '\0') {
+                            putchar(*str);
+                            str++;
+                            count++;
+                        }
+                    }
+                    break;
+
+                case '%':
+                    // %%: Percent sign
+                    putchar('%');
+                    count++;
+                    break;
+
+                default:
+                    // Unknown specifier, just print it as is
+                    putchar('%');
+                    putchar(*format);
+                    count += 2;
+            }
+        } else {
+            // Regular character, just print it
+            putchar(*format);
+            count++;
+        }
+
+        format++; // move to the next character in the format string
+    }
+
+    va_end(args);
+    return count;
+}
+
+int main() {
+    // Example usage
+    _printf("Hello, %s! This is a %c example. The value of pi is %.2f%%.\n", "world", 'C', 3.14159);
+    
+    return 0;
 }
