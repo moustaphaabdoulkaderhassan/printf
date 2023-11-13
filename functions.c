@@ -2,7 +2,8 @@
 
 /**
  * print_chr - prints a character
- * Returns: The number of characters printed
+ * @c: The character to be printed.
+ * Return: The number of characters printed (Always 1).
  */
 int print_chr(char c)
 {
@@ -11,6 +12,7 @@ int print_chr(char c)
 
 /**
  * print_str - Prints a string.
+ * @str: The string to be printed.
  * Return: Number of characters printed.
  */
 int print_str(const char *str)
@@ -27,6 +29,7 @@ int print_str(const char *str)
 
 /**
  * print_binry - is a function that Prints an unsigned number.
+ * @num: The unsigned integer to be printed.
  * Return: The numbers of characters printed.
  */
 int print_binry(unsigned int num)
@@ -44,6 +47,7 @@ int print_binry(unsigned int num)
 
 /**
  * print_int - prints an integer
+ * @num: The integer to be printed.
  * Return: Number of chars printed
  */
 int print_int(int num)
@@ -80,6 +84,6 @@ int print_int(int num)
 	}
 
 	n += write(1, buffer, chrs_printed);
-	
+
 	return (n);
 }
