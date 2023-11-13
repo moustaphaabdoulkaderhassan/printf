@@ -1,15 +1,22 @@
 #include "main.h"
 
 /**
- * _printf - is the Printf function
- * @format: format.
- * Return: Printed characterss.
+ * _printf - Custom printf function.
+ * @format: Format string with %s, %c, %b, %i, %d specifiers.
+ *
+ * Description:
+ * This function mimics the behavior of the standard printf function with a
+ * subset of format specifiers. It iterates through the format string, printing
+ * characters directly or interpreting format specifiers to print corresponding
+ * values.
+ *
+ * Return: The total number of characters printed.
  */
 int _printf(const char *format, ...)
 {
 	va_list ap;
+	const char *p;
 	int n = 0;
-        const char *p;
 
 	if (format == NULL)
 	{

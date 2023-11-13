@@ -80,6 +80,6 @@ int print_int(int num)
 	}
 
 	n += write(1, buffer, chrs_printed);
-
+	
 	return (n);
 }
