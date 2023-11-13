@@ -1,5 +1,8 @@
 #include "main.h"
 
+void prints_buffer(char buffer[], int *ind_buffer);
+
+
 /**
  * _printf - Custom printf function.
  * @format: Format string with %s, %c, %b, %i, %d specifiers.
@@ -14,46 +17,57 @@
  */
 int _printf(const char *format, ...)
 {
-	va_list ap;
-	const char *p;
-	int n = 0;
+	int i, printed = 0, chrs_printed = 0;
+	int flags, width, precision, size, ind_buff = 0;
+	va_list list;
+	char buffer[BUFFER_SIZE];
 
 	if (format == NULL)
-	{
-		return -1;
-	}
+		return (-1);
 
-	va_start(ap, format);
+	va_start(list, format);
 
-	for (p = format; *p != '\0'; p++)
+	for (i = 0; format && format[i] != '\0'; i++)
 	{
-		if (*p != '%')
+		if (format[i] != '%')
 		{
-			n += print_chr(*p);
+			buffer[ind_buff++] = format[i];
+			if (ind_buff == BUFFER_SIZE)
+				prints_buffer(buffer, &ind_buff);
+			/*write(1, &format[i], 1); */
+			chrs_printed++;
 		}
 		else
 		{
-			p++;
-			if (*p == 's')
-			{
-				n += print_str(va_arg(ap, const char *));
-			}
-			else if (*p == 'c')
-			{
-				n += print_chr(va_arg(ap, int));
-			}
-			else if (*p == 'b')
-			{
-				n += print_binry(va_arg(ap, unsigned int));
-			}
-			else if (*p == 'i' || *p == 'd')
-			{
-				n += print_int(va_arg(ap, int));
-			}
+			prints_buffer(buffer, &ind_buff);
+			flags = fetch_flags(format, &i);
+			width = fetch_width(format, &i, list);
+			precision = fetch_precision(format, &i, list);
+			size = fetch_size(format, &i);
+			++i;
+			printed = control_print( format, &i, list, buffer, flags, width, precision, size);
+			if (printed == -1)
+				return (-1);
+			chrs_printed += printed;
 		}
 	}
 
-	va_end(ap);
+	prints_buffer(buffer, &ind_buff);
 
-	return n;
+	va_end(list);
+
+	return (chrs_printed);
+}
+
+/**
+ *prints_buffer - Prints the contents of the buffer, if it exist
+ *@buffer: Array of chars
+ *@ind_buff: The Index at which to add next Characters, represents the length.
+ */
+void prints_buffer(char buffer[], int *ind_buff)
+{
+	if (*ind_buff > 0)
+		write(1, &buffer[0], *ind_buff);
+
+	*ind_buff = 0;
 }
