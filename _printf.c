@@ -1,64 +1,55 @@
-#include <main.h>
-#include <stdio.h>
-#include <stdarg.h>
+#include "main.h"
+#include <stddef.h>
+#include <unistd.h> // Include the necessary header for write function
 
-int _printf(const char *format, ...) {
-    va_list args;
-    va_start(args, format);
+/**
+ * control_print - Prints an argument based on its type
+ * @fmt: Formatted string in which to print the arguments.
+ * @index: Index.
+ * @list: List of arguments to be printed.
+ * @buffer: Is the buffer array to handle print.
+ * @flags: Calculates active flags.
+ * @width: Gets width.
+ * @precision: Precision specification.
+ * @size: The size specifier.
+ * Return: Number of characters printed or -1 on error.
+ */
+int control_print(const char *fmt, int *index, va_list list, char buffer[],
+                  int flags, int width, int precision, int size)
+{
+    int i, unknown_len = 0, printed_chars = -1;
+    fmt_t fmt_types[] = {
+        {'c', print_char}, {'s', print_string}, {'%', print_percent},
+        {'i', print_int}, {'d', print_int}, {'b', print_binary},
+        {'u', print_unsigned}, {'o', print_octal}, {'x', print_hexadecimal},
+        {'X', print_hexa_upper}, {'p', print_pointer}, {'S', print_non_printable},
+        {'r', print_reverse}, {'R', print_rot13string}, {'\0', NULL}
+    };
 
-    int count = 0; // to keep track of the number of characters printed
+    for (i = 0; fmt_types[i].fmt != '\0'; i++)
+        if (fmt[(*index)] == fmt_types[i].fmt)
+            return (fmt_types[i].fn(list, buffer, flags, width, precision, size));
 
-    while (*format != '\0') {
-        if (*format == '%') {
-            format++; // move to the next character after '%'
-
-            switch (*format) {
-                case 'c':
-                    // %c: Character
-                    putchar(va_arg(args, int));
-                    count++;
-                    break;
-                    
-                case 's':
-                    // %s: String
-                    {
-                        const char *str = va_arg(args, const char *);
-                        while (*str != '\0') {
-                            putchar(*str);
-                            str++;
-                            count++;
-                        }
-                    }
-                    break;
-
-                case '%':
-                    // %%: Percent sign
-                    putchar('%');
-                    count++;
-                    break;
-
-                default:
-                    // Unknown specifier, just print it as is
-                    putchar('%');
-                    putchar(*format);
-                    count += 2;
-            }
-        } else {
-            // Regular character, just print it
-            putchar(*format);
-            count++;
+    if (fmt_types[i].fmt == '\0')
+    {
+        if (fmt[(*index)] == '\0')
+            return (-1);
+        unknown_len += write(1, "%%", 1);
+        if (fmt[(*index) - 1] == ' ')
+            unknown_len += write(1, " ", 1);
+        else if (width)
+        {
+            --(*index);
+            while (fmt[(*index)] != ' ' && fmt[(*index)] != '%')
+                --(*index);
+            if (fmt[(*index)] == ' ')
+                --(*index);
+            return (1);
         }
 
-        format++; // move to the next character in the format string
+        unknown_len += write(1, &fmt[(*index)], 1);
+        return (unknown_len);
     }
 
-    va_end(args);
-    return count;
-}
-
-int main() {
-    // Example usage
-    _printf("0. I'm not going anywhere. You can print that wherever you want to. I'm here and I'm a Spur for life\n");
-
-    return 0;
+    return (printed_chars);
 }
