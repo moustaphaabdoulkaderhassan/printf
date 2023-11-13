@@ -5,6 +5,8 @@
 #include <stdarg.h>
 
 int _printf(const char *format, ...);
+
+/* My functions.c */
 int print_chr(char c);
 int print_str(const char *str);
 int print_binry(unsigned int num);
