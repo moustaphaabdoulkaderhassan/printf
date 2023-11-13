@@ -7,16 +7,16 @@
  */
 int _printf(const char *format, ...)
 {
+	va_list ap;
+	int n = 0;
+        const char *p;
+
 	if (format == NULL)
 	{
 		return -1;
 	}
 
-	va_list ap;
 	va_start(ap, format);
-
-	int n = 0;
-	const char *p;
 
 	for (p = format; *p != '\0'; p++)
 	{

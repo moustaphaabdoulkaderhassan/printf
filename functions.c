@@ -49,6 +49,7 @@ int print_binry(unsigned int num)
 int print_int(int num)
 {
 	int n = 0;
+	int i = 0;
 	int temp = num;
 	char buffer[12];
 	int chrs_printed = 0;
@@ -71,7 +72,8 @@ int print_int(int num)
 		chrs_printed++;
 	}
 
-	for (int i = chrs_printed - 1; i >= 0; i--)
+	i = chrs_printed - 1;
+	while (i >= 0 && i--)
 	{
 		buffer[chrs_printed - 1 - i] = (num % 10) + '0';
 		num /= 10;
