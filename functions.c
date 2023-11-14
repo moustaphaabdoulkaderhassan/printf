@@ -1,58 +1,190 @@
 #include "main.h"
 
 /**
- *print_char - Writes a single character to the standard output
- *@c: Character to be printed
+ *print_chr - Prints a char
+ *@types: List a of arguments
+ *@buffer: Buffer array to handle print
+ *@flags:  Calculates active flags
+ *@width: Width
+ *@precision: Precision specification
+ *@size: Size specifier
+ *Return: Number of chars printed
  */
-void print_char(char c)
+int print_chr(va_list types, char buffer[],
+	int flags, int width, int precision, int size)
 {
-	write(1, &c, 1);
+	char c = va_arg(types, int);
+
+	return (handle_write_char(c, buffer, flags, width, precision, size));
 }
 
+/*************************PRINT A STRING *************************/
 /**
- *print_str - Writes a null-terminated string to the standard output
- *@s: Pointer to the string to be printed
+ *print_str - Prints a string
+ *@types: List a of arguments
+ *@buffer: Buffer array to handle print
+ *@flags:  Calculates active flags
+ *@width: get width.
+ *@precision: Precision specification
+ *@size: Size specifier
+ *Return: Number of chars printed
  */
-void print_str(const char *s)
+int print_str(va_list types, char buffer[],
+	int flags, int width, int precision, int size)
 {
-	for (const char *t = s; *t; t++)
+	int length = 0, i;
+	char *str = va_arg(types, char *);
+
+	UNUSED(buffer);
+	UNUSED(flags);
+	UNUSED(width);
+	UNUSED(precision);
+	UNUSED(size);
+	if (str == NULL)
 	{
-		write(1, t, 1);
+		str = "(null)";
+		if (precision >= 6)
+			str = "      ";
 	}
+
+	while (str[length] != '\0')
+		length++;
+
+	if (precision >= 0 && precision < length)
+		length = precision;
+
+	if (width > length)
+	{
+		if (flags & F_MINUS)
+		{
+			write(1, &str[0], length);
+			for (i = width - length; i > 0; i--)
+				write(1, " ", 1);
+			return (width);
+		}
+		else
+		{
+			for (i = width - length; i > 0; i--)
+				write(1, " ", 1);
+			write(1, &str[0], length);
+			return (width);
+		}
+	}
+
+	return (write(1, str, length));
 }
 
+/*************************PRINT PERCENT SIGN *************************/
 /**
- *print_unsigned - Writes an unsigned integer as a string
- *@num: Unsigned integer to be printed
- *@digits: Digits used for conversion (e.g., "0123456789")
+ *print_cent - Prints a percent sign
+ *@types: Lista of arguments
+ *@buffer: Buffer array to handle print
+ *@flags:  Calculates active flags
+ *@width: get width.
+ *@precision: Precision specification
+ *@size: Size specifier
+ *Return: Number of chars printed
  */
-void print_unsigned(unsigned int num, const char *digits)
+int print_cent(va_list types, char buffer[],
+	int flags, int width, int precision, int size)
 {
-	char buf[32], *q = buf + sizeof(buf);
-	*--q = '\0';
+	UNUSED(types);
+	UNUSED(buffer);
+	UNUSED(flags);
+	UNUSED(width);
+	UNUSED(precision);
+	UNUSED(size);
+	return (write(1, "%%", 1));
+}
 
-	do {
-		*--q = digits[num % 10];
+/*************************PRINT INT *************************/
+/**
+ *print_interger - Print int
+ *@types: Lista of arguments
+ *@buffer: Buffer array to handle print
+ *@flags:  Calculates active flags
+ *@width: get width.
+ *@precision: Precision specification
+ *@size: Size specifier
+ *Return: Number of chars printed
+ */
+int print_interger(va_list types, char buffer[],
+	int flags, int width, int precision, int size)
+{
+	int i = BUFFER_SIZE - 2;
+	int is_negative = 0;
+	long int n = va_arg(types, long int);
+	unsigned long int num;
+
+	n = convert_size_num(n, size);
+
+	if (n == 0)
+		buffer[i--] = '0';
+
+	buffer[BUFFER_SIZE - 1] = '\0';
+	num = (unsigned long int) n;
+
+	if (n < 0)
+	{
+		num = (unsigned long int)((-1) * n);
+		is_negative = 1;
+	}
+
+	while (num > 0)
+	{
+		buffer[i--] = (num % 10) + '0';
 		num /= 10;
-	} while (num > 0);
+	}
 
-	write(1, q, buf + sizeof(buf) - q - 1);
+	i++;
+
+	return (write_number(is_negative, i, buffer, flags, width, precision, size));
 }
 
+/*************************PRINT BINARY *************************/
 /**
- *print_hex - Writes an unsigned integer in hexadecimal
- *@num: Unsigned integer to be printed
- *@hex_digits: Digits used for hexadecimal conversion
+ *print_binary - Prints an unsigned number
+ *@types: List of arguments
+ *@buffer: Is the Buffer array to handle print
+ *@flags:  Calculates active flags
+ *@width: gets width.
+ *@precision: Precision specification
+ *@size: Size specifier
+ *Return: Numbers of characters printed.
  */
-void print_hex(unsigned int num, const char *hex_digits)
+int print_binary(va_list types, char buffer[],
+	int flags, int width, int precision, int size)
 {
-	char buf[32], *q = buf + sizeof(buf);
-	*--q = '\0';
+	unsigned int n, m, i, sum;
+	unsigned int a[32];
+	int count;
 
-	do {
-		*--q = hex_digits[num % 16];
-		num /= 16;
-	} while (num > 0);
+	UNUSED(buffer);
+	UNUSED(flags);
+	UNUSED(width);
+	UNUSED(precision);
+	UNUSED(size);
 
-	write(1, q, buf + sizeof(buf) - q - 1);
+	n = va_arg(types, unsigned int);
+	m = 2147483648; /*(2 ^ 31) */
+	a[0] = n / m;
+	for (i = 1; i < 32; i++)
+	{
+		m /= 2;
+		a[i] = (n / m) % 2;
+	}
+
+	for (i = 0, sum = 0, count = 0; i < 32; i++)
+	{
+		sum += a[i];
+		if (sum || i == 31)
+		{
+			char z = '0' + a[i];
+
+			write(1, &z, 1);
+			count++;
+		}
+	}
+
+	return (count);
 }
