@@ -1,56 +1,49 @@
 #include "main.h"
 
-void print_buff(char buffer[], int *ind_buff);
-
 /**
- *_printf - Custom printf function
- *@format: Format string
- *
- *Return: Number of characters printed (excluding the null byte)
+ * _printf - Printf function
+ * @format: format.
+ * Return: Printed chars.
  */
 int _printf(const char *format, ...)
 {
-	va_list list;
-	int i = 0, chrs_printed = 0;
-	char buffer[BUFFER_SIZE];
+	va_list args;
+	va_start(args, format);
+	int count = 0;
 
-	va_start(list, format);
-
-	while (format && format[i])
+	for (int i = 0; format[i]; i++)
 	{
-		if (format[i] == '%' && format[i + 1])
+		if (format[i] != '%')
 		{
-			int flags, width, precision, size;
-			flags = fetch_flags(format, &i);
-			width = fetch_width(format, &i, list);
-			precision = fetch_precision(format, &i, list);
-			size = fetch_size(format, &i);
-
-			chrs_printed += control_print(format, &i, list, buffer, flags, width, precision, size);
+			write(STDOUT_FILENO, &format[i], 1);
+			count++;
 		}
 		else
 		{
-			buffer[0] = format[i];
-			buffer[1] = '\0';
-			chrs_printed += handle_write_char(format[i], buffer, 0, 0, 0, 0);
 			i++;
+			if (format[i] == 'b')
+			{
+				unsigned int num = va_arg(args, unsigned int);
+				_print_binary(num);
+			}
+			else if (format[i] == 'c')
+			{
+				char c = (char) va_arg(args, int);
+				write(STDOUT_FILENO, &c, 1);
+				count++;
+			}
+			else if (format[i] == 'd' || format[i] == 'i')
+			{
+				_print_digits(va_arg(args, int), &count);
+			}
+			else if (format[i] == 's')
+			{
+				char *str = va_arg(args, char *);
+				_print_string(str, &count);
+			}
 		}
 	}
 
-	va_end(list);
-
-	return (chrs_printed);
-}
-
-/**
- *print_buff - Prints the contents of the buffer if it exists
- *@buffer: Array of chars
- *@ind_buff: Index at which to add the next char, represents the length.
- */
-void print_buff(char buffer[], int *ind_buff)
-{
-	if (*ind_buff > 0)
-		write(1, &buffer[0], *ind_buff);
-
-	*ind_buff = 0;
+	va_end(args);
+	return count;
 }
