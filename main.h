@@ -38,8 +38,6 @@ int write_pointer(char buffer[], int ind, int length,
                   int width, int flags, char padd, char extra_c, int padd_start);
 int write_number(int is_negative, int ind, char buffer[],
                  int flags, int width, int precision, int size);
-int write_pointer(char buffer[], int ind, int length,
-                  int width, int flags, char padd, char extra_c, int padd_start);
 int write_non_printable(char buffer[], int ind, char *str,
                         int flags, int width, int precision, int size);
 int write_reverse(char buffer[], int ind, char *str,
