@@ -21,12 +21,14 @@ int _printf(const char *format, ...)
 		if (format[i] == '%' && format[i + 1])
 		{
 			int flags, width, precision, size;
+
 			flags = fetch_flags(format, &i);
 			width = fetch_width(format, &i, list);
 			precision = fetch_precision(format, &i, list);
 			size = fetch_size(format, &i);
 
-			chrs_printed += control_print(format, &i, list, buffer, flags, width, precision, size);
+			chrs_printed += control_print(format, &i, list, buffer,
+					flags, width, precision, size);
 		}
 		else
 		{

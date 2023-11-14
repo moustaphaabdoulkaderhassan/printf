@@ -68,7 +68,7 @@ int print_interger(va_list types, char buffer[],
 int print_binary(va_list types, char buffer[],
                  int flags, int width, int precision, int size);
 int print_unsigned(va_list types, char buffer[],
-                   int flags, int width, int precision, int size);
+		int flags, int width, int precision, int size);
 int print_oct(va_list types, char buffer[],
               int flags, int width, int precision, int size);
 int print_hexadec(va_list types, char buffer[],

@@ -13,7 +13,7 @@
  * Return: (1) or (2)
  */
 int control_print(const char *fmt, int *ind, va_list list, char buffer[],
-	int flags, int width, int precision, int size)
+		int flags, int width, int precision, int size)
 {
 	int i, unknown_len = 0, chrs_printed = -1;
 	fmt_t arr[] = {
