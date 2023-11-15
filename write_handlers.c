@@ -29,15 +29,15 @@ int handle_write_char(char c, char buffer[],
 
 	if (width > 1)
 	{
-		buffer[i] = '\0';
+		buffer[BUFFER_SIZE - 1] = '\0';
 		for (i = 1; i < width; i++)
-			buffer[i] = padd;
+			buffer[BUFFER_SIZE - 1 - 2] = padd;
 
 		if (flags & F_MINUS)
 			return (write(1, &buffer[0], 1) +
-				write(1, &buffer[1], width - 1));
+				write(1, &buffer[BUFFER_SIZE - i - 1], width - 1));
 		else
-			return (write(1, &buffer[1], width - 1) +
+			return (write(1, &buffer[BUFFER_SIZE - i - 1], width - 1) +
 				write(1, &buffer[0], 1));
 	}
 
