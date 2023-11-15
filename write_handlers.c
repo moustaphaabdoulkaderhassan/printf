@@ -98,26 +98,19 @@ int write_num(int ind, char buffer[], int flags, int width, int prec,
 
 	if (prec == 0 && ind == BUFFER_SIZE - 2 && buffer[ind] == '0' && width == 0)
 		return (0);
-
 	if (prec == 0 && ind == BUFFER_SIZE - 2 && buffer[ind] == '0')
 		buffer[ind] = padd = ' ';
-
 	if (prec > 0 && prec < length)
 		padd = ' ';
-
 	while (prec > length)
 		buffer[--ind] = '0', length++;
-
 	if (extra_c != 0)
 		length++;
-
 	if (width > length)
 	{
-		buffer[ind] = '\0';
-
 		for (i = 0; i < width - length; i++)
 			buffer[i] = padd;
-
+		buffer[ind] = '\0';
 		if (flags & F_MINUS && padd == ' ')
 		{
 			if (extra_c)
