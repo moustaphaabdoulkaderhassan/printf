@@ -58,7 +58,7 @@ int handle_write_char(char c, char buffer[],
  *Return: Number of characters printed.
  */
 int write_number(int is_negative, int ind, char buffer[],
-	int flags, int width, int precision, int size)
+		int flags, int width, int precision, int size)
 {
 	int length = BUFFER_SIZE - ind - 1;
 	char padd = ' ', extra_c = 0;
@@ -75,7 +75,7 @@ int write_number(int is_negative, int ind, char buffer[],
 		extra_c = ' ';
 
 	return (write_num(ind, buffer, flags, width, precision,
-		length, padd, extra_c));
+				length, padd, extra_c));
 }
 
 /**
