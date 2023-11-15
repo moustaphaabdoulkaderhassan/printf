@@ -1,4 +1,3 @@
-#ifndef MAIN_H
 #define MAIN_H
 
 int _printf(const char *format, ...);
@@ -9,5 +8,3 @@ long long int power(int base, int x);
 long long convertToDecimal(int Number, int base);
 int print_binary(int number);
 int print_unsigned(unsigned int number);
-
-#endif/
