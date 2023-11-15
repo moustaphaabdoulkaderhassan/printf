@@ -63,9 +63,9 @@ int print_cent(va_list types, char buffer[],
 
 /* Functions to print numbers too */
 int print_interger(va_list types, char buffer[],
-                   int flags, int width, int precision, int size);
+		int flags, int width, int precision, int size);
 int print_binary(va_list types, char buffer[],
-                 int flags, int width, int precision, int size);
+		int flags, int width, int precision, int size);
 int print_unsigned(va_list types, char buffer[],
 		int flags, int width, int precision, int size);
 int print_oct(va_list types, char buffer[],
