@@ -1,68 +1,40 @@
 #include "main.h"
 
 /**
- * handle_plus_space_hash_flags - Handle +, space, and # flags for non-custom conversion specifiers
- * @format: Format string
- * @specifier: Current conversion specifier
- *
- * Return: Number of characters printed
+ * get_flags - Extracts formatting flags from the given format string
+ * @format: Formatted string containing flags
+ * @i: Current index in the format string
+ * Return: Active flags
  */
-int handle_plus_space_hash_flags(const char *format, char specifier)
+int get_flags(const char *format, int *i)
 {
-	int printed_chars = 0;
+    /* Flag characters and their corresponding values */
+    const char FLAGS_CH[] = {'-', '+', '0', '#', ' ', '\0'};
+    const int FLAGS_ARR[] = {F_MINUS, F_PLUS, F_ZERO, F_HASH, F_SPACE, 0};
 
-	/* Handle '+' flag */
-	if (format[0] == '+')
-	{
-		/* Implement logic for the '+' flag if needed,
-		 * for example, print a sign for numeric conversions */
-		printed_chars += putchr('+');
-	}
-	/* Handle ' ' flag */
-	else if (format[0] == ' ')
-	{
-		/* Implement logic for the ' ' flag if needed,
-		 * for example, print a space before positive values */
-		printed_chars += putchr(' ');
-	}
-	/* Handle '#' flag */
-	else if (format[0] == '#')
-	{
-		/* Implement logic for the '#' flag if needed,
-		 * for example, print a prefix for certain conversions */
-		printed_chars += putchr('#');
-	}
+    int j, currIndex;
+    int flags = 0;
 
-	/* Handle the conversion specifier */
-	switch (specifier)
-	{
-	case 'd':
-		/* Implement logic for the 'd' specifier */
-		break;
-	/* Handle other conversion specifiers as needed */
-	}
+    /* Iterate through the format string to find flags */
+    for (currIndex = *i + 1; format[currIndex] != '\0'; currIndex++)
+    {
+        /* Check if the current character is a valid flag */
+        for (j = 0; FLAGS_CH[j] != '\0'; j++)
+        {
+            if (format[currIndex] == FLAGS_CH[j])
+            {
+                flags |= FLAGS_ARR[j]; /* Set the corresponding flag */
+                break;
+            }
+        }
 
-	return printed_chars;
-}
+        /* If the current character is not a valid flag, exit the loop */
+        if (FLAGS_CH[j] == '\0')
+            break;
+    }
 
-/**
- * get_flags - Get and handle flags for non-custom conversion specifiers
- * @format: Format string
- *
- * Return: Number of characters printed
- */
-int get_flags(const char *format)
-{
-	int printed_chars = 0;
+    *i = currIndex - 1; /* Update the index */
 
-	/* Handle flags based on the current conversion specifier */
-	if (format[0] == '+' || format[0] == ' ' || format[0] == '#')
-	{
-		/* Assuming specifier comes immediately after the flag */
-		printed_chars += handle_plus_space_hash_flags(format + 1, format[1]);
-	}
-	/* Handle other cases or return an error if needed */
-
-	return (printed_chars); /* Added parentheses around the return statement */
+    return (flags);
 }
 
