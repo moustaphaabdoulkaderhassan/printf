@@ -1,11 +1,12 @@
 #include "main.h"
 
 /**
- * print_HEXA_extra - prints a hexgecimal number.
+ * print_hexa_extra - prints a hexgecimal number.
  * @num: is the number to print.
- * Return: (counter).
+ *
+ * Return: the number of character printed(counter).
  */
-int print_HEXA_extra(unsigned int num)
+int print_hexa_extra(unsigned int num)
 {
 	int i;
 	int *array;
