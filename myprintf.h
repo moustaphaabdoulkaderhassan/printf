@@ -3,6 +3,11 @@
 
 #include <stdarg.h>
 
+/**
+ * myprintf - Custom implementation of printf
+ * @format: Format string
+ * @...: Variable number of arguments
+ */
 void myprintf(const char *format, ...);
 
-#endif
+#endif /* MYPRINTF_H */
