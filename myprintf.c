@@ -1,4 +1,3 @@
-#include <main.c>
 #include "myprintf.h"
 #include <stdio.h>
 
