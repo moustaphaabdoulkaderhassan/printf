@@ -1,45 +1,48 @@
 #include "main.h"
 
-void print_buff(char buffer[], int *ind_buff);
-
 /**
- *_printf - Custom printf function
- *@format: Format string
+ * _printf - A function that selects the correct function to print.
+ * @format: Is the identifier to look for.
  *
- *Return: Number of characters printed (excluding the null byte)
+ * Return: The length of string(lenght).
  */
-int _printf(const char *format, ...)
+int _printf(const char * const format, ...)
 {
-	va_list list;
-	int i = 0, chrs_printed = 0;
-	char buffer[BUFFER_SIZE];
+	convert p[] = {
+		{"%s", print_str}, {"%c", print_chr},
+		{"%%", print_cent},
+		{"%i", print_integer}, {"%d", print_decimal}, {"%r", print_rev},
+		{"%R", print_rot13str}, {"%b", print_binry},
+		{"%u", print_unsgnd},
+		{"%o", print_oct}, {"%x", print_hexadec}, {"%X", print_hexa},
+		{"%S", print_exc_str}, {"%p", print_ptr}
+	};
 
-	va_start(list, format);
+	va_list args;
+	int i = 0, j, length = 0;
 
-	while (format && format[i])
+	va_start(args, format);
+	if (format == NULL || (format[0] == '%' && format[1] == '\0'))
+		return (-1);
+
+Here:
+	while (format[i] != '\0')
 	{
-		if (format[i] == '%' && format[i + 1])
+		j = 13;
+		while (j >= 0)
 		{
-			int flags, width, precision, size;
-
-			flags = fetch_flags(format, &i);
-			width = fetch_width(format, &i, list);
-			precision = fetch_precision(format, &i, list);
-			size = fetch_size(format, &i);
-
-			chrs_printed += control_print(format, &i, list, buffer,
-					flags, width, precision, size);
+			if (p[j].ph[0] == format[i] && p[j].ph[1] == format[i + 1])
+			{
+				length += p[j].function(args);
+				i = i + 2;
+				goto Here;
+			}
+			j--;
 		}
-		else
-		{
-			buffer[0] = format[i];
-			buffer[1] = '\0';
-			chrs_printed += handle_write_char(format[i], buffer, 0, 0, 0, 0);
-			i++;
-		}
+		_putchar(format[i]);
+		length++;
+		i++;
 	}
-
-	va_end(list);
-
-	return (chrs_printed);
+	va_end(args);
+	return (length);
 }

@@ -1,23 +1,62 @@
-#project task
+#0x11. C - printf team project
 
-This a repository for the ALX team project for the printf.
+Group Project:                                                                      
+                                                                                    
+0. I'm not going anywhere. You can print that wherever you want to. I'm here and I'm
+ a Spur for life                                                                    
+Write a function that produces output according to a format.                        
+                                                                                    
+                                                                                    
+1. Education is when you read the fine print. Experience is what you get if you don'
+t                                                                                   
+Handle the following conversion specifiers:
 
-The printf() function prints output to stdout, according to format and other arguments passed to printf(). The string format consists of two types of items - characters that will be printed to the screen, and format commands that define how the other arguments to printf() are displayed. Basically, you specify a format string that has text in it, as well as "special" characters that map to the other arguments of printf().
-
-The prototype of this function is: int _printf(const char format, ...);
-
-This means that it has one mandatory format argument, and an extra number of arguments that can be none, or many.
-
-Format of the format string
-
-The format string is a character string starting and ending with double quotes. The format string is composed of zero or more directives; ordinary characters (not %), and conversion specifications, each of which results in fetching zero or more subsequent arguments.
-
-Each conversion specification is introduced by the character % and ends with a conversion specifier. In between there may be (in this order):
-
-Zero or more flags
-
-An optional field width
-
-An optional precision modifier
-
-An optional length modifier
+2. With a face like mine, I do better in print                                      
+Handle the following custom conversion specifiers:                                  
+                                                                                    
+3. What one has not experienced, one will never understand in print                 
+Handle the following conversion specifiers:                                         
+                                                                                    
+4. Nothing in fine print is ever good news                                          
+Use a local buffer of 1024 chars in order to call write as little as possible.      
+                                                                                    
+5. My weakness is wearing too much leopard print                                    
+Handle the following custom conversion specifier:                                   
+                                                                                    
+6. How is the world ruled and led to war? Diplomats lie to journalists and believe t
+hese lies when they see them in print                                               
+Handle the following conversion specifier: p.                                       
+                                                                                    
+7. The big print gives and the small print takes away                               
+Handle the following flag characters for non-custom conversion specifiers:          
+                                                                                    
+8. Sarcasm is lost in print                                                         
+Handle the following length modifiers for non-custom conversion specifiers:         
+                                                                                    
+l                                                                                   
+h                                                                                   
+Conversion specifiers to handle: d, i, u, o, x, X                                   
+                                                                                    
+9. Print some money and give it to us for the rain forests                          
+Handle the field width for non-custom conversion specifiers.                        
+                                                                                    
+10. The negative is the equivalent of the composer's score, and the print the perfor
+mance                                                                               
+Handle the precision for non-custom conversion specifiers.                          
+                                                                                    
+11. It's depressing when you're still around and your albums are out of print       
+Handle the 0 flag character for non-custom conversion specifiers.                   
+                                                                                    
+12. Every time that I wanted to give up, if I saw an interesting textile, print what
+ ever, suddenly I would see a collection                                            
+Handle the - flag character for non-custom conversion specifiers.                   
+                                                                                    
+13. Print is the sharpest and the strongest weapon of our party                     
+Handle the following custom conversion specifier:                                   
+                                                                                    
+14. The flood of print has turned reading into a process of gulping rather than savo
+ring                                                                                
+Handle the following custom conversion specifier:                                   
+                                                                                    
+15. *                                                                               
+All the above options work well together.
