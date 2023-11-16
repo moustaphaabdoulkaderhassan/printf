@@ -47,5 +47,6 @@ int _putchar(char c);
 int _printf(const char *format, ...);
 int fetch_width(const char *format, int *i, va_list list);
 int is_dig(char c);
+int control_print(const char *format, int *i, va_list args, convert p[]);
 
 #endif
