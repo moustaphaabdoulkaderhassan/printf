@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <stdarg.h>
+
+void _printf(const char *format, ...);
+
+int main(void)
+{
+    _printf("%S\n", "Best\nSchool");
+    return (0);
+}
+
+void print_special_string(const char *str) {
+    while (*str) {
+        if (*str >= 32 && *str < 127) {
+            putchar(*str);
+        } else {
+            printf("\\x%02X", *str);
+        }
+        str++;
+    }
+}
+
+void _printf(const char *format, ...) {
+    va_list args;
+    va_start(args, format);
+
+    while (*format) {
+        if (*format == '%' && *(format + 1) == 'S') {
+            format += 2; // Move past the %S
+            print_special_string(va_arg(args, const char *));
+        } else {
+            putchar(*format);
+            format++;
+        }
+    }
+
+    va_end(args);
+}
+
