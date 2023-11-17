@@ -1,47 +1,53 @@
 #include "main.h"
 
 /**
- * print_hex - prints unsigned hex numbers in lowercase
- * @ap: the argument pointer
- * @params: the parameters struct
+ * convert - converter function, a clone of itoa
+ * @num: number
+ * @base: base
+ * @flags: argument flags
+ * @params: paramater struct
  *
- * Return: bytes printed
+ * Return: string
  */
-int print_hex(va_list ap, params_t *params)
+char *convert(long int num, int base, int flags, params_t *params)
 {
-	unsigned long l;
-	int c = 0;
-	char *str;
+	static char *array;
+	static char buffer[50];
+	char sign = 0;
+	char *ptr;
+	unsigned long n = num;
+	(void)params;
 
-	if (params->l_modifier)
-		l = (unsigned long)va_arg(ap, unsigned long);
-	else if (params->h_modifier)
-		l = (unsigned short int)va_arg(ap, unsigned int);
-	else
-		l = (unsigned int)va_arg(ap, unsigned int);
-
-	str = convert(l, 16, CONVERT_UNSIGNED | CONVERT_LOWERCASE, params);
-	if (params->hashtag_flag && l)
+	if (!(flags & CONVERT_UNSIGNED) && num < 0)
 	{
-		*--str = 'x';
-		*--str = '0';
+		n = -num;
+		sign = '-';
+
 	}
-	params->unsign = 1;
-	return (c += print_number(str, params));
+	array = flags & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
+	ptr = &buffer[49];
+	*ptr = '\0';
+
+	do	{
+		*--ptr = array[n % base];
+		n /= base;
+	} while (n != 0);
+
+	if (sign)
+		*--ptr = sign;
+	return (ptr);
 }
 
 /**
- * print_HEX - prints unsigned hex numbers in uppercase
- * @ap: the argument pointer
+ * print_unsigned - prints unsigned integer numbers
+ * @ap: argument pointer
  * @params: the parameters struct
  *
  * Return: bytes printed
  */
-int print_HEX(va_list ap, params_t *params)
+int print_unsigned(va_list ap, params_t *params)
 {
 	unsigned long l;
-	int c = 0;
-	char *str;
 
 	if (params->l_modifier)
 		l = (unsigned long)va_arg(ap, unsigned long);
@@ -49,58 +55,29 @@ int print_HEX(va_list ap, params_t *params)
 		l = (unsigned short int)va_arg(ap, unsigned int);
 	else
 		l = (unsigned int)va_arg(ap, unsigned int);
-
-	str = convert(l, 16, CONVERT_UNSIGNED, params);
-	if (params->hashtag_flag && l)
-	{
-		*--str = 'X';
-		*--str = '0';
-	}
 	params->unsign = 1;
-	return (c += print_number(str, params));
+	return (print_number(convert(l, 10, CONVERT_UNSIGNED, params), params));
 }
+
+
+
 /**
- * print_binary - prints unsigned binary number
- * @ap: the argument pointer
+ * print_address - prints address
+ * @ap: argument pointer
  * @params: the parameters struct
  *
  * Return: bytes printed
  */
-int print_binary(va_list ap, params_t *params)
+int print_address(va_list ap, params_t *params)
 {
-	unsigned int n = va_arg(ap, unsigned int);
-	char *str = convert(n, 2, CONVERT_UNSIGNED, params);
-	int c = 0;
-
-	if (params->hashtag_flag && n)
-		*--str = '0';
-	params->unsign = 1;
-	return (c += print_number(str, params));
-}
-
-/**
- * print_octal - prints unsigned octal numbers
- * @ap: the argument pointer
- * @params: the parameters struct
- *
- * Return: bytes printed
- */
-int print_octal(va_list ap, params_t *params)
-{
-	unsigned long l;
+	unsigned long int n = va_arg(ap, unsigned long int);
 	char *str;
-	int c = 0;
 
-	if (params->l_modifier)
-		l = (unsigned long)va_arg(ap, unsigned long);
-	else if (params->h_modifier)
-		l = (unsigned short int)va_arg(ap, unsigned int);
-	else
-		l = (unsigned int)va_arg(ap, unsigned int);
-	str = convert(l, 8, CONVERT_UNSIGNED, params);
+	if (!n)
+		return (_puts("(nil)"));
 
-	if (params->hashtag_flag && l)
-		*--str = '0';
-	params->unsign = 1;
-	return (c += print_number(str, params));
+	str = convert(n, 16, CONVERT_UNSIGNED | CONVERT_LOWERCASE, params);
+	*--str = 'x';
+	*--str = '0';
+	return (print_number(str, params));
 }
