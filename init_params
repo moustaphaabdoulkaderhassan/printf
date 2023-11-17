@@ -1,0 +1,27 @@
+#include <stdarg.h>
+
+typedef struct {
+    const char *format;
+    va_list args;
+} Params;
+
+void init_params(Params *params, const char *format, ...) {
+    params->format = format;
+    va_start(params->args, format);
+}
+
+int main() {
+    Params params;
+    init_params(&params, "Example: %d, %s\n", 42, "Hello");
+    // Now you can use params.format and params.args in your printf implementation
+
+    int a = va_arg(params.args, int);
+    const char *str = va_arg(params.args, const char *);
+
+    // Perform the necessary processing based on the format and arguments
+
+    va_end(params.args);
+
+    return 0;
+}
+
